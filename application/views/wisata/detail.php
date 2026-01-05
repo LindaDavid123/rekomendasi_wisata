@@ -80,10 +80,17 @@
     .rating-stars {
         font-size: 2rem;
         cursor: pointer;
-        color: #ffc107;
     }
     .rating-stars i {
         transition: all 0.2s;
+        cursor: pointer;
+        color: #ddd;
+    }
+    .rating-stars i.fas {
+        color: #ffc107 !important;
+    }
+    .rating-stars i.far {
+        color: #ddd !important;
     }
     .rating-stars i:hover {
         transform: scale(1.2);
@@ -207,38 +214,38 @@
         <i class="fas fa-arrow-left"></i>
         Kembali
     </a>
-    
+
     <div class="row">
         <!-- Main Content -->
         <div class="col-lg-8">
             <!-- Hero Image -->
             <div class="detail-hero mb-4">
-                <img src="<?= get_wisata_image($wisata['foto']) ?>" alt="<?= $wisata['nama'] ?>">
+                <img src="<?php echo get_wisata_image($wisata['foto'])?>" alt="<?php echo $wisata['nama']?>">
                 <div class="detail-hero-overlay">
-                    <h1 class="mb-2"><?= $wisata['nama'] ?></h1>
-                    <p class="mb-2"><i class="fas fa-map-marker-alt me-2"></i><?= $wisata['alamat'] ?></p>
-                    <span class="badge bg-light text-dark px-3 py-2"><i class="fas fa-tag me-2"></i><?= ucfirst($wisata['kategori']) ?></span>
+                    <h1 class="mb-2"><?php echo $wisata['nama']?></h1>
+                    <p class="mb-2"><i class="fas fa-map-marker-alt me-2"></i><?php echo $wisata['alamat']?></p>
+                    <span class="badge bg-light text-dark px-3 py-2"><i class="fas fa-tag me-2"></i><?php echo ucfirst($wisata['kategori'])?></span>
                 </div>
             </div>
-            
+
             <!-- Price & Favorite -->
             <div class="info-card card mb-4">
                 <div class="card-body p-4">
                     <div class="row align-items-center g-4">
                         <div class="col-md-6">
                             <p class="text-muted mb-2"><i class="fas fa-ticket-alt me-2"></i>Harga Tiket Masuk</p>
-                            <div class="price-tag"><?= format_rupiah($wisata['harga_tiket']) ?></div>
+                            <div class="price-tag"><?php echo format_rupiah($wisata['harga_tiket'])?></div>
                         </div>
                         <?php if ($this->session->userdata('user_id')): ?>
                             <div class="col-md-6">
                                 <div class="favorite-section">
-                                    <button class="btn-favorite" 
-                                            data-wisata-id="<?= $wisata['id'] ?>"
-                                            title="<?= isset($is_favorite) && $is_favorite ? 'Hapus dari Favorit' : 'Tambah ke Favorit' ?>">
-                                        <i class="<?= isset($is_favorite) && $is_favorite ? 'fas' : 'far' ?> fa-heart"></i>
+                                    <button class="btn-favorite"
+                                            data-wisata-id="<?php echo $wisata['id']?>"
+                                            title="<?php echo isset($is_favorite) && $is_favorite ? 'Hapus dari Favorit' : 'Tambah ke Favorit'?>">
+                                        <i class="<?php echo isset($is_favorite) && $is_favorite ? 'fas' : 'far'?> fa-heart"></i>
                                     </button>
                                     <div class="favorite-text">
-                                        <?= isset($is_favorite) && $is_favorite ? 'Hapus Favorit' : 'Tambah Favorit' ?>
+                                        <?php echo isset($is_favorite) && $is_favorite ? 'Hapus Favorit' : 'Tambah Favorit'?>
                                     </div>
                                 </div>
                             </div>
@@ -246,7 +253,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Rating Section -->
             <div class="info-card card mb-4">
                 <div class="card-body">
@@ -254,44 +261,89 @@
                     <div class="row align-items-center">
                         <div class="col-md-4">
                             <div class="rating-box">
-                                <h1><?= number_format($wisata['rating_avg'], 1) ?></h1>
-                                <div class="mb-2"><?= get_star_rating($wisata['rating_avg']) ?></div>
-                                <p class="mb-0"><?= $wisata['jumlah_rating'] ?> Rating</p>
+                                <h1><?php echo number_format($wisata['rating_avg'], 1)?></h1>
+                                <div class="mb-2"><?php echo get_star_rating($wisata['rating_avg'])?></div>
+                                <p class="mb-0"><?php echo $wisata['jumlah_rating']?> Rating</p>
                             </div>
                         </div>
                         <div class="col-md-8">
                             <?php if ($this->session->userdata('user_id')): ?>
                                 <div class="rating-section">
-                                    <form id="userRatingForm" method="post" action="<?= base_url('wisata/submit_rating') ?>">
-                                        <input type="hidden" name="wisata_id" value="<?= $wisata['id'] ?>">
+                                    <form id="userRatingForm" method="post" action="<?php echo base_url('wisata/submit_rating')?>">
+                                        <input type="hidden" name="wisata_id" value="<?php echo $wisata['id']?>">
                                         <label class="form-label fw-bold mb-3">Beri Rating Anda:</label>
                                         <div class="rating-stars" id="user-rating-stars">
                                             <?php $current_rating = is_array($user_rating) && isset($user_rating['rating']) ? $user_rating['rating'] : (is_numeric($user_rating) ? $user_rating : 0); ?>
                                             <?php for ($i = 1; $i <= 5; $i++): ?>
-                                                <i class="fa-star <?= $i <= $current_rating ? 'fas' : 'far' ?>" data-value="<?= $i ?>"></i>
+                                                <i class="fa-star <?php echo $i <= $current_rating ? 'fas' : 'far'?>" data-value="<?php echo $i?>"></i>
                                             <?php endfor; ?>
-                                            <input type="hidden" name="rating" id="user-rating-value" value="<?= $current_rating ?>">
+                                            <input type="hidden" name="rating" id="user-rating-value" value="<?php echo $current_rating?>">
                                         </div>
                                         <button type="submit" class="btn btn-success mt-3">Kirim Rating</button>
                                     </form>
                                     <div id="user-rating-message" class="mt-2"></div>
                                     <?php if ($current_rating > 0): ?>
-                                        <p class="text-success mt-2"><i class="fas fa-check-circle me-2"></i>Anda memberikan <?= $current_rating ?> bintang</p>
+                                        <p class="text-success mt-2"><i class="fas fa-check-circle me-2"></i>Anda memberikan <?php echo $current_rating?> bintang</p>
                                     <?php endif; ?>
                                 </div>
                                 <script>
-                                    document.querySelectorAll('#user-rating-stars .fa-star').forEach(function(star) {
+                                    // Rating stars interaction
+                                    const stars = document.querySelectorAll('#user-rating-stars .fa-star');
+                                    const ratingInput = document.getElementById('user-rating-value');
+
+                                    stars.forEach(function(star) {
+                                        // Click to select rating
                                         star.addEventListener('click', function() {
-                                            var val = this.getAttribute('data-value');
-                                            document.getElementById('user-rating-value').value = val;
-                                            document.querySelectorAll('#user-rating-stars .fa-star').forEach(function(s, idx) {
-                                                s.classList.toggle('fas', idx < val);
-                                                s.classList.toggle('far', idx >= val);
+                                            const value = parseInt(this.getAttribute('data-value'));
+                                            ratingInput.value = value;
+
+                                            // Update all stars
+                                            stars.forEach(function(s) {
+                                                const starValue = parseInt(s.getAttribute('data-value'));
+                                                if (starValue <= value) {
+                                                    s.classList.remove('far');
+                                                    s.classList.add('fas');
+                                                } else {
+                                                    s.classList.remove('fas');
+                                                    s.classList.add('far');
+                                                }
+                                            });
+                                        });
+
+                                        // Hover effect
+                                        star.addEventListener('mouseenter', function() {
+                                            const value = parseInt(this.getAttribute('data-value'));
+                                            stars.forEach(function(s) {
+                                                const starValue = parseInt(s.getAttribute('data-value'));
+                                                if (starValue <= value) {
+                                                    s.style.color = '#ffc107';
+                                                }
+                                            });
+                                        });
+
+                                        star.addEventListener('mouseleave', function() {
+                                            const currentValue = parseInt(ratingInput.value) || 0;
+                                            stars.forEach(function(s) {
+                                                const starValue = parseInt(s.getAttribute('data-value'));
+                                                if (starValue <= currentValue) {
+                                                    s.style.color = '#ffc107';
+                                                } else {
+                                                    s.style.color = '#ddd';
+                                                }
                                             });
                                         });
                                     });
+
+                                    // Form submit
                                     document.getElementById('userRatingForm').addEventListener('submit', function(e) {
                                         e.preventDefault();
+
+                                        const rating = parseInt(ratingInput.value);
+                                        if (!rating || rating < 1 || rating > 5) {
+                                            alert('Silakan pilih rating 1-5 bintang');
+                                            return;
+                                        }
+
                                         var form = this;
                                         var formData = new FormData(form);
                                         fetch(form.action, {
@@ -302,79 +354,80 @@
                                         .then(data => {
                                             var msg = document.getElementById('user-rating-message');
                                             if (data.success) {
-                                                msg.innerHTML = '<span class="text-success">Rating berhasil dikirim!</span>';
+                                                msg.innerHTML = '<div class="alert alert-success"><i class="fas fa-check-circle me-2"></i>Rating berhasil dikirim!</div>';
+                                                setTimeout(() => location.reload(), 1500);
                                             } else {
-                                                msg.innerHTML = '<span class="text-danger">'+data.message+'</span>';
+                                                msg.innerHTML = '<div class="alert alert-danger">'+data.message+'</div>';
                                             }
                                         })
                                         .catch(() => {
-                                            document.getElementById('user-rating-message').innerHTML = '<span class="text-danger">Terjadi kesalahan, coba lagi.</span>';
+                                            document.getElementById('user-rating-message').innerHTML = '<div class="alert alert-danger">Terjadi kesalahan, coba lagi.</div>';
                                         });
                                     });
                                 </script>
                             <?php else: ?>
                                 <div class="alert alert-info">
                                     <i class="fas fa-info-circle me-2"></i>
-                                    <a href="<?= base_url('login') ?>" class="alert-link">Login</a> untuk memberikan rating dan ulasan
+                                    <a href="<?php echo base_url('login')?>" class="alert-link">Login</a> untuk memberikan rating dan ulasan
                                 </div>
                             <?php endif; ?>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Details -->
             <div class="info-card card mb-4">
                 <div class="card-body">
                     <h5 class="section-title">Informasi Lengkap</h5>
-                    
+
                     <div class="info-badge">
                         <h6 class="mb-2"><i class="fas fa-align-left text-primary me-2"></i>Deskripsi</h6>
-                        <p class="mb-0"><?= nl2br($wisata['deskripsi']) ?></p>
+                        <p class="mb-0"><?php echo nl2br($wisata['deskripsi'])?></p>
                     </div>
-                    
+
                     <?php if ($wisata['jam_buka'] || $wisata['jam_tutup']): ?>
                         <div class="info-badge">
                             <h6 class="mb-2"><i class="fas fa-clock text-success me-2"></i>Jam Operasional</h6>
-                            <p class="mb-0"><strong><?= $wisata['jam_buka'] ?> - <?= $wisata['jam_tutup'] ?></strong></p>
+                            <p class="mb-0"><strong><?php echo $wisata['jam_buka']?> - <?php echo $wisata['jam_tutup']?></strong></p>
                         </div>
                     <?php endif; ?>
-                    
+
                     <?php if ($wisata['latitude'] && $wisata['longitude']): ?>
                         <div class="info-badge">
                             <h6 class="mb-2"><i class="fas fa-map-marked-alt text-danger me-2"></i>Peta Lokasi</h6>
-                            <a href="https://www.google.com/maps?q=<?= $wisata['latitude'] ?>,<?= $wisata['longitude'] ?>" 
+                            <a href="https://www.google.com/maps?q=<?php echo $wisata['latitude']?>,<?php echo $wisata['longitude']?>"
                                target="_blank" class="btn btn-outline-primary btn-sm">
                                 <i class="fas fa-external-link-alt me-2"></i>Buka di Google Maps
                             </a>
                         </div>
                     <?php endif; ?>
-                    
+
                     <?php if ($wisata['fasilitas']): ?>
                         <div class="info-badge">
                             <h6 class="mb-2"><i class="fas fa-concierge-bell text-info me-2"></i>Fasilitas</h6>
-                            <p class="mb-0"><?= nl2br($wisata['fasilitas']) ?></p>
+                            <p class="mb-0"><?php echo nl2br($wisata['fasilitas'])?></p>
                         </div>
                     <?php endif; ?>
-                    
+
                     <?php if ($wisata['kontak']): ?>
                         <div class="info-badge">
                             <h6 class="mb-2"><i class="fas fa-phone text-warning me-2"></i>Kontak</h6>
-                            <p class="mb-0"><?= $wisata['kontak'] ?></p>
+                            <p class="mb-0"><?php echo $wisata['kontak']?></p>
                         </div>
                     <?php endif; ?>
                 </div>
             </div>
-            
+
             <!-- Reviews -->
             <div class="info-card card mb-4">
                 <div class="card-body">
-                    <h5 class="section-title">Ulasan Pengunjung (<?= count($reviews) ?>)</h5>
-                    
+                    <h5 class="section-title">Ulasan Pengunjung (<?php echo count($reviews)?>)</h5>
+
                     <?php if ($this->session->userdata('user_id')): ?>
                         <div class="bg-light p-4 rounded mb-4">
-                            <form id="reviewForm" method="post" action="<?= base_url('wisata/submit_review') ?>">
-                                <input type="hidden" name="wisata_id" value="<?= $wisata['id'] ?>">
+                            <form id="reviewForm" method="post" action="<?php echo base_url('wisata/submit_review')?>">
+                                <input type="hidden" name="wisata_id" value="<?php echo $wisata['id']?>">
                                 <input type="hidden" name="rating" value="5">
                                 <div class="mb-3">
                                     <label class="form-label fw-bold"><i class="fas fa-edit me-2"></i>Tulis Ulasan Anda</label>
@@ -386,26 +439,26 @@
                             </form>
                         </div>
                     <?php endif; ?>
-                    
-                    <?php if (!empty($reviews)): ?>
+
+                    <?php if (! empty($reviews)): ?>
                         <div class="reviews-list">
                             <?php foreach ($reviews as $review): ?>
                                 <div class="review-item">
                                     <div class="d-flex mb-3">
                                         <div class="me-3">
                                             <div class="user-avatar bg-gradient-primary d-flex align-items-center justify-content-center text-white fw-bold" style="width: 50px; height: 50px;">
-                                                <?= strtoupper(substr($review['username'], 0, 1)) ?>
+                                                <?php echo strtoupper(substr($review['username'], 0, 1))?>
                                             </div>
                                         </div>
                                         <div class="flex-grow-1">
-                                            <h6 class="mb-1 fw-bold"><?= $review['username'] ?></h6>
+                                            <h6 class="mb-1 fw-bold"><?php echo $review['username']?></h6>
                                             <small class="text-muted">
                                                 <i class="far fa-clock me-1"></i>
-                                                <?= isset($review['created_at']) ? format_datetime($review['created_at']) : 'Tidak ada tanggal' ?>
+                                                <?php echo isset($review['created_at']) ? format_datetime($review['created_at']) : 'Tidak ada tanggal'?>
                                             </small>
                                         </div>
                                     </div>
-                                    <p class="mb-0"><?= nl2br(htmlspecialchars($review['review'])) ?></p>
+                                    <p class="mb-0"><?php echo nl2br(htmlspecialchars($review['review']))?></p>
                                 </div>
                             <?php endforeach; ?>
                         </div>
@@ -418,33 +471,33 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Sidebar -->
         <div class="col-lg-4">
             <!-- Similar Wisata -->
-            <?php if (!empty($similar_wisata)): ?>
+            <?php if (! empty($similar_wisata)): ?>
                 <div class="info-card card sticky-top" style="top: 20px;">
                     <div class="card-header text-white" style="background: #2d5016; border-radius: 15px 15px 0 0;">
                         <h5 class="mb-0"><i class="fas fa-compass me-2"></i>Wisata Serupa</h5>
                     </div>
                     <div class="card-body p-3">
                         <?php foreach ($similar_wisata as $index => $similar): ?>
-                            <a href="<?= base_url('wisata/detail/' . $similar['id']) ?>" class="text-decoration-none">
+                            <a href="<?php echo base_url('wisata/detail/' . $similar['id'])?>" class="text-decoration-none">
                                 <div class="similar-card">
                                     <div class="d-flex">
-                                        <img src="<?= get_wisata_image($similar['foto']) ?>" 
-                                             class="rounded me-3" 
+                                        <img src="<?php echo get_wisata_image($similar['foto'])?>"
+                                             class="rounded me-3"
                                              style="width: 90px; height: 90px; object-fit: cover;">
                                         <div class="flex-grow-1">
-                                            <h6 class="mb-1 text-dark"><?= $similar['nama'] ?></h6>
+                                            <h6 class="mb-1 text-dark"><?php echo $similar['nama']?></h6>
                                             <small class="text-muted d-block mb-2">
-                                                <i class="fas fa-map-marker-alt me-1"></i><?= substr($similar['alamat'], 0, 40) ?>...
+                                                <i class="fas fa-map-marker-alt me-1"></i><?php echo substr($similar['alamat'], 0, 40)?>...
                                             </small>
                                             <div class="mb-1">
-                                                <?= get_star_rating($similar['rating_avg']) ?>
-                                                <small class="text-muted">(<?= $similar['jumlah_rating'] ?>)</small>
+                                                <?php echo get_star_rating($similar['rating_avg'])?>
+                                                <small class="text-muted">(<?php echo $similar['jumlah_rating']?>)</small>
                                             </div>
-                                            <span class="badge bg-primary"><?= format_rupiah($similar['harga_tiket']) ?></span>
+                                            <span class="badge bg-primary"><?php echo format_rupiah($similar['harga_tiket'])?></span>
                                         </div>
                                     </div>
                                 </div>
@@ -511,7 +564,7 @@ document.querySelectorAll('.btn-favorite').forEach(btn => {
         const section = button.closest('.favorite-section');
         const textDiv = section.querySelector('.favorite-text');
 
-        fetch("<?= base_url('favorit/toggle') ?>", {
+        fetch("<?php echo base_url('favorit/toggle')?>", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
@@ -524,7 +577,7 @@ document.querySelectorAll('.btn-favorite').forEach(btn => {
                 alert(data.message);
                 return;
             }
-            
+
             // Update icon
             if (data.favorited) {
                 icon.classList.remove('far');
