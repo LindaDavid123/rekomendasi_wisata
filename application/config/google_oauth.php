@@ -7,8 +7,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 
 $config['google_oauth'] = [
-    'client_id' => 'YOUR_GOOGLE_CLIENT_ID',
-    'client_secret' => 'YOUR_GOOGLE_CLIENT_SECRET',
-    'redirect_uri' => 'http://localhost/wisata_ci3/auth/google_callback',
+    'client_id' => '464823547696-npgdnvohimp9hnmamqbc2bcbgsqh95nc.apps.googleusercontent.com',
+    'client_secret' => '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',
+    'redirect_uri' => 'http://localhost/rekomendasi_wisata/auth/google_callback',
     'scopes' => ['email', 'profile']
 ];

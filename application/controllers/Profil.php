@@ -22,10 +22,13 @@ class Profil extends CI_Controller {
     
     public function index() {
         $user_id = $this->session->userdata('user_id');
+
+        $user_row = $this->User_model->get_by_id($user_id);
+        $user = $this->normalize_user($user_row);
         
         $data = [
             'title' => 'Profil Saya',
-            'user' => $this->User_model->get_by_id($user_id),
+            'user' => $user,
             'statistics' => $this->User_model->get_statistics($user_id),
             'recent_ratings' => $this->Rating_model->get_user_ratings($user_id, 10),
             'favorites' => $this->Favorit_model->get_user_favorites($user_id)
@@ -38,10 +41,12 @@ class Profil extends CI_Controller {
     
     public function edit() {
         $user_id = $this->session->userdata('user_id');
-        
+        $user_row = $this->User_model->get_by_id($user_id);
+        $user = $this->normalize_user($user_row);
+
         $data = [
             'title' => 'Edit Profil',
-            'user' => $this->User_model->get_by_id($user_id)
+            'user' => $user
         ];
         
         $this->load->view('templates/header', $data);
@@ -62,7 +67,13 @@ class Profil extends CI_Controller {
             return;
         }
         
-        $user = $this->User_model->get_by_id($user_id);
+        $user_row = $this->User_model->get_by_id($user_id);
+        $user = $this->normalize_user($user_row);
+
+    // Avatar preset selections
+    $available_avatars = ['avatar:girl', 'avatar:boy', 'avatar:cat', 'avatar:dog', 'avatar:fox', 'avatar:panda', 'avatar:flower', 'avatar:flower_pink', 'avatar:flower_blue', 'avatar:flower_yellow', 'avatar:butterfly', 'avatar:bunny', 'avatar:robot'];
+        $avatar_choice = $this->input->post('avatar_choice');
+        $use_avatar = in_array($avatar_choice, $available_avatars, true);
         
         // Upload foto if provided
         $foto = $user['foto'];
@@ -80,17 +91,25 @@ class Profil extends CI_Controller {
             
             if ($this->upload->do_upload('foto')) {
                 // Delete old foto
-                if ($foto && file_exists('./uploads/users/' . $foto)) {
+                if ($foto && strpos($foto, 'avatar:') !== 0 && file_exists('./uploads/users/' . $foto)) {
                     unlink('./uploads/users/' . $foto);
                 }
                 $foto = $this->upload->data('file_name');
             }
         }
+
+        // Use preset avatar if selected and no new upload
+        if (empty($_FILES['foto']['name']) && $use_avatar) {
+            if ($foto && strpos($foto, 'avatar:') !== 0 && file_exists('./uploads/users/' . $foto)) {
+                unlink('./uploads/users/' . $foto);
+            }
+            $foto = $avatar_choice;
+        }
         
         $data = [
-            'nama' => $this->input->post('nama'),
+            'nama_lengkap' => $this->input->post('nama'),
             'email' => $this->input->post('email'),
-            'foto' => $foto
+            'foto_profil' => $foto
         ];
         
         // Update password if provided
@@ -100,11 +119,34 @@ class Profil extends CI_Controller {
         }
         
         if ($this->User_model->update($user_id, $data)) {
+            // Refresh session info so dashboard/avatar uses latest data
+            $this->session->set_userdata([
+                'nama' => $data['nama_lengkap'],
+                'email' => $data['email'],
+                'foto' => $foto,
+                'foto_profil' => $foto,
+            ]);
             $this->session->set_flashdata('success', 'Profil berhasil diupdate');
         } else {
             $this->session->set_flashdata('error', 'Gagal mengupdate profil');
         }
         
         redirect('profil');
+    }
+
+    private function normalize_user($row) {
+        if (!$row) {
+            return [
+                'nama' => '',
+                'email' => '',
+                'foto' => null,
+            ];
+        }
+
+        return [
+            'nama' => $row['nama'] ?? ($row['nama_lengkap'] ?? ($row['username'] ?? '')),
+            'email' => $row['email'] ?? '',
+            'foto' => $row['foto'] ?? ($row['foto_profil'] ?? null),
+        ];
     }
 }

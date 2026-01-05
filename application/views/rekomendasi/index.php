@@ -1,4 +1,56 @@
 <style>
+    .navbar-wrapper {
+        width: 100%;
+        background: white;
+        padding: 15px 40px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+        position: sticky;
+        top: 0;
+        height: auto;
+        z-index: 1000;
+    }
+    .navbar-logo {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #4a6b3d 0%, #5a8f4a 100%);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        font-weight: 700;
+        margin-right: auto;
+        text-decoration: none;
+    }
+    .navbar-menu {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+    }
+    .nav-item {
+        padding: 12px 20px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: #666;
+        transition: all 0.3s;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 14px;
+    }
+    .nav-item:hover, .nav-item.active {
+        background: linear-gradient(135deg, #4a6b3d 0%, #5a8f4a 100%);
+        color: white;
+    }
     .btn-back-rekomendasi {
         background: #2d5016;
         color: white;
@@ -21,6 +73,38 @@
         box-shadow: 0 8px 20px rgba(45,80,22,0.4);
     }
 </style>
+
+<!-- Navbar -->
+<div class="navbar-wrapper">
+    <a href="<?= base_url('dashboard') ?>" class="navbar-logo" title="Dashboard">W</a>
+    
+    <nav class="navbar-menu">
+        <a href="<?= base_url('dashboard') ?>" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span class="d-none d-lg-inline">Home</span>
+        </a>
+        <a href="<?= base_url('wisata') ?>" class="nav-item">
+            <i class="fas fa-map-marked-alt"></i>
+            <span class="d-none d-lg-inline">Wisata</span>
+        </a>
+        <a href="<?= base_url('rekomendasi') ?>" class="nav-item active">
+            <i class="fas fa-magic"></i>
+            <span class="d-none d-lg-inline">Rekomendasi</span>
+        </a>
+        <a href="<?= base_url('favorit') ?>" class="nav-item">
+            <i class="fas fa-heart"></i>
+            <span class="d-none d-lg-inline">Favorit</span>
+        </a>
+        <a href="<?= base_url('profil') ?>" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span class="d-none d-lg-inline">Profil</span>
+        </a>
+        <a href="<?= base_url('auth/logout') ?>" class="nav-item">
+            <i class="fas fa-sign-out-alt"></i>
+            <span class="d-none d-lg-inline">Logout</span>
+        </a>
+    </nav>
+</div>
 
 <div class="container py-5">
     <!-- Tombol Kembali -->
@@ -163,3 +247,33 @@
         </div>
     <?php endif; ?>
 </div>
+
+<script>
+function refreshRecommendations() {
+    fetch('<?= base_url('rekomendasi/get_realtime') ?>')
+        .then(response => response.json())
+        .then(data => {
+            if (!data.recommendations) return;
+            var container = document.querySelector('.mb-5 .row');
+            if (container) {
+                container.innerHTML = '';
+                data.recommendations.forEach(function(wisata) {
+                    container.innerHTML += `
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 shadow-sm position-relative">
+                            <img src='${wisata.foto ? '<?= base_url('uploads/') ?>'+wisata.foto : '<?= base_url('assets/images/no-image.png') ?>'}' class='card-img-top' alt='${wisata.nama}' style='height:200px;object-fit:cover;'>
+                            <div class='card-body'>
+                                <h5 class='card-title'>${wisata.nama}</h5>
+                                <p class='text-muted mb-2'><i class='fas fa-map-marker-alt'></i> ${wisata.alamat}</p>
+                                <div class='mb-2'>${wisata.rating_avg ? '⭐ ' + wisata.rating_avg : ''} <small class='text-muted'>(${wisata.jumlah_rating})</small></div>
+                                <p class='text-primary fw-bold'>${wisata.harga_tiket ? 'Rp ' + wisata.harga_tiket : ''}</p>
+                                <a href='<?= base_url('wisata/detail/') ?>${wisata.id}' class='btn btn-primary w-100'>Detail</a>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+            }
+        });
+}
+setInterval(refreshRecommendations, 10000); // refresh setiap 10 detik
+</script>

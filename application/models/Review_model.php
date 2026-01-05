@@ -21,11 +21,15 @@ class Review_model extends CI_Model {
         return $this->db->get($this->table)->result_array();
     }
     
-    public function save_review($user_id, $wisata_id, $review) {
+    public function save_review($user_id, $wisata_id, $review, $rating = 5) {
+        // Pastikan rating mengikuti constraint 1-5 agar tidak gagal insert
+        $rating = max(1, min(5, (int) $rating));
+
         $data = [
             'user_id' => $user_id,
             'wisata_id' => $wisata_id,
-            'review' => $review
+            'review' => $review,
+            'rating' => $rating,
         ];
         
         return $this->db->insert($this->table, $data);

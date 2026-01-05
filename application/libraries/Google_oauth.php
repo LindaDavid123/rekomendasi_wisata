@@ -14,9 +14,11 @@ class Google_oauth {
     
     public function __construct() {
         $this->CI =& get_instance();
-        $this->CI->config->load('google_oauth');
-        
+        $this->CI->config->load('google_oauth', true);
         $config = $this->CI->config->item('google_oauth');
+        if (!$config || !isset($config['client_id']) || !isset($config['client_secret']) || !isset($config['redirect_uri']) || !isset($config['scopes'])) {
+            show_error('Google OAuth belum dikonfigurasi dengan benar. Pastikan file application/config/google_oauth.php dan autoload.php sudah benar.');
+        }
         $this->client_id = $config['client_id'];
         $this->client_secret = $config['client_secret'];
         $this->redirect_uri = $config['redirect_uri'];

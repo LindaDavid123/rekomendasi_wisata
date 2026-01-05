@@ -1,6 +1,7 @@
 <style>
     body {
-        background: #E8E4DC;
+        background: #f5f7fa;
+        font-family: 'Segoe UI', Arial, sans-serif;
     }
     .detail-hero {
         position: relative;
@@ -108,6 +109,13 @@
         border-radius: 50%;
         object-fit: cover;
         border: 3px solid #4a6b3d;
+        background: linear-gradient(135deg, #e3eafc 0%, #f8f9fa 100%); /* default bg */
+    }
+    .user-avatar[src*="girl.png"] {
+        background: linear-gradient(135deg, #ffe2f2 0%, #fff6fa 100%);
+    }
+    .user-avatar[src*="boy.png"] {
+        background: linear-gradient(135deg, #e2f0ff 0%, #f6fbff 100%);
     }
     .similar-card {
         transition: all 0.3s;
@@ -132,42 +140,48 @@
         border-color: #4a6b3d;
     }
     .btn-favorite {
-        border-radius: 50px;
-        padding: 12px 30px;
-        font-weight: 600;
-        font-size: 0.95rem;
-        transition: all 0.3s;
-        border: 2px solid;
-        white-space: nowrap;
+        border: none;
+        background: none;
+        padding: 0;
         cursor: pointer;
-    }
-    .btn-favorite:not(.btn-danger):hover {
-        background-color: #dc3545;
-        border-color: #dc3545;
-        color: white;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(220,53,69,0.3);
-    }
-    .btn-favorite.btn-danger:hover {
-        background-color: #bb2d3b;
-        border-color: #bb2d3b;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(220,53,69,0.4);
-    }
-    .btn-favorite:active {
-        transform: translateY(0);
-    }
-    .btn-favorite.favorited {
-        background-color: #dc3545;
-        border-color: #dc3545;
-        color: white;
+        font-size: 2rem;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #dc3545;
     }
     .btn-favorite i {
-        font-size: 1.1rem;
-        transition: all 0.2s;
+        transition: all 0.3s;
     }
     .btn-favorite:hover i {
-        transform: scale(1.1);
+        transform: scale(1.2);
+        filter: drop-shadow(0 4px 8px rgba(220,53,69,0.3));
+    }
+    .btn-favorite.favorited i {
+        color: #dc3545;
+    }
+    .favorite-section {
+        background: linear-gradient(135deg, #fff5f7 0%, #ffe8ec 100%);
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        border: 2px dashed #ffb3c1;
+        transition: all 0.3s;
+    }
+    .favorite-section:hover {
+        border-color: #ff69b4;
+        box-shadow: 0 5px 20px rgba(220,53,69,0.15);
+    }
+    .favorite-section .btn-favorite {
+        justify-content: center;
+        font-size: 3rem;
+        margin-bottom: 10px;
+    }
+    .favorite-text {
+        font-weight: 600;
+        color: #2d5016;
+        font-size: 0.95rem;
     }
     .section-title {
         font-size: 1.5rem;
@@ -210,18 +224,23 @@
             <!-- Price & Favorite -->
             <div class="info-card card mb-4">
                 <div class="card-body p-4">
-                    <div class="row align-items-center g-3">
+                    <div class="row align-items-center g-4">
                         <div class="col-md-6">
                             <p class="text-muted mb-2"><i class="fas fa-ticket-alt me-2"></i>Harga Tiket Masuk</p>
                             <div class="price-tag"><?= format_rupiah($wisata['harga_tiket']) ?></div>
                         </div>
                         <?php if ($this->session->userdata('user_id')): ?>
-                            <div class="col-md-6 text-md-end">
-                                <button class="btn <?= isset($is_favorite) && $is_favorite ? 'btn-danger' : 'btn-outline-danger' ?> btn-favorite" 
-                                        data-wisata-id="<?= $wisata['id'] ?>">
-                                    <i class="<?= isset($is_favorite) && $is_favorite ? 'fas' : 'far' ?> fa-heart me-2"></i> 
-                                    <?= isset($is_favorite) && $is_favorite ? 'Hapus Favorit' : 'Tambah Favorit' ?>
-                                </button>
+                            <div class="col-md-6">
+                                <div class="favorite-section">
+                                    <button class="btn-favorite" 
+                                            data-wisata-id="<?= $wisata['id'] ?>"
+                                            title="<?= isset($is_favorite) && $is_favorite ? 'Hapus dari Favorit' : 'Tambah ke Favorit' ?>">
+                                        <i class="<?= isset($is_favorite) && $is_favorite ? 'fas' : 'far' ?> fa-heart"></i>
+                                    </button>
+                                    <div class="favorite-text">
+                                        <?= isset($is_favorite) && $is_favorite ? 'Hapus Favorit' : 'Tambah Favorit' ?>
+                                    </div>
+                                </div>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -243,17 +262,56 @@
                         <div class="col-md-8">
                             <?php if ($this->session->userdata('user_id')): ?>
                                 <div class="rating-section">
-                                    <label class="form-label fw-bold mb-3">Beri Rating Anda:</label>
-                                    <?php $current_rating = is_array($user_rating) && isset($user_rating['rating']) ? $user_rating['rating'] : (is_numeric($user_rating) ? $user_rating : 0); ?>
-                                    <div class="rating-stars" data-wisata-id="<?= $wisata['id'] ?>" data-current-rating="<?= $current_rating ?>">
-                                        <?php for ($i = 5; $i >= 1; $i--): ?>
-                                            <i class="<?= $i <= $current_rating ? 'fas' : 'far' ?> fa-star" data-rating="<?= $i ?>"></i>
-                                        <?php endfor; ?>
-                                    </div>
+                                    <form id="userRatingForm" method="post" action="<?= base_url('wisata/submit_rating') ?>">
+                                        <input type="hidden" name="wisata_id" value="<?= $wisata['id'] ?>">
+                                        <label class="form-label fw-bold mb-3">Beri Rating Anda:</label>
+                                        <div class="rating-stars" id="user-rating-stars">
+                                            <?php $current_rating = is_array($user_rating) && isset($user_rating['rating']) ? $user_rating['rating'] : (is_numeric($user_rating) ? $user_rating : 0); ?>
+                                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                                                <i class="fa-star <?= $i <= $current_rating ? 'fas' : 'far' ?>" data-value="<?= $i ?>"></i>
+                                            <?php endfor; ?>
+                                            <input type="hidden" name="rating" id="user-rating-value" value="<?= $current_rating ?>">
+                                        </div>
+                                        <button type="submit" class="btn btn-success mt-3">Kirim Rating</button>
+                                    </form>
+                                    <div id="user-rating-message" class="mt-2"></div>
                                     <?php if ($current_rating > 0): ?>
                                         <p class="text-success mt-2"><i class="fas fa-check-circle me-2"></i>Anda memberikan <?= $current_rating ?> bintang</p>
                                     <?php endif; ?>
                                 </div>
+                                <script>
+                                    document.querySelectorAll('#user-rating-stars .fa-star').forEach(function(star) {
+                                        star.addEventListener('click', function() {
+                                            var val = this.getAttribute('data-value');
+                                            document.getElementById('user-rating-value').value = val;
+                                            document.querySelectorAll('#user-rating-stars .fa-star').forEach(function(s, idx) {
+                                                s.classList.toggle('fas', idx < val);
+                                                s.classList.toggle('far', idx >= val);
+                                            });
+                                        });
+                                    });
+                                    document.getElementById('userRatingForm').addEventListener('submit', function(e) {
+                                        e.preventDefault();
+                                        var form = this;
+                                        var formData = new FormData(form);
+                                        fetch(form.action, {
+                                            method: 'POST',
+                                            body: formData
+                                        })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            var msg = document.getElementById('user-rating-message');
+                                            if (data.success) {
+                                                msg.innerHTML = '<span class="text-success">Rating berhasil dikirim!</span>';
+                                            } else {
+                                                msg.innerHTML = '<span class="text-danger">'+data.message+'</span>';
+                                            }
+                                        })
+                                        .catch(() => {
+                                            document.getElementById('user-rating-message').innerHTML = '<span class="text-danger">Terjadi kesalahan, coba lagi.</span>';
+                                        });
+                                    });
+                                </script>
                             <?php else: ?>
                                 <div class="alert alert-info">
                                     <i class="fas fa-info-circle me-2"></i>
@@ -315,8 +373,9 @@
                     
                     <?php if ($this->session->userdata('user_id')): ?>
                         <div class="bg-light p-4 rounded mb-4">
-                            <form method="post" action="<?= base_url('wisata/submit_review') ?>">
+                            <form id="reviewForm" method="post" action="<?= base_url('wisata/submit_review') ?>">
                                 <input type="hidden" name="wisata_id" value="<?= $wisata['id'] ?>">
+                                <input type="hidden" name="rating" value="5">
                                 <div class="mb-3">
                                     <label class="form-label fw-bold"><i class="fas fa-edit me-2"></i>Tulis Ulasan Anda</label>
                                     <textarea name="review" class="form-control" rows="4" placeholder="Bagikan pengalaman Anda..." required></textarea>
@@ -342,7 +401,7 @@
                                             <h6 class="mb-1 fw-bold"><?= $review['username'] ?></h6>
                                             <small class="text-muted">
                                                 <i class="far fa-clock me-1"></i>
-                                                <?= isset($review['created_at']) ? time_elapsed_string($review['created_at']) : 'Baru saja' ?>
+                                                <?= isset($review['created_at']) ? format_datetime($review['created_at']) : 'Tidak ada tanggal' ?>
                                             </small>
                                         </div>
                                     </div>
@@ -400,3 +459,89 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('reviewForm');
+    if (!form) return;
+
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Mengirim...';
+
+        try {
+            const formData = new FormData(form);
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData,
+            });
+
+            let data = null;
+            try {
+                data = await response.json();
+            } catch (_) {
+                // Biarkan handling di bawah ketika data null
+            }
+
+            if (!response.ok || !data || !data.success) {
+                const message = data && data.message ? data.message : 'Ulasan gagal dikirim. Coba lagi.';
+                throw new Error(message);
+            }
+
+            // Reload to show new review without berpindah halaman lain
+            window.location.reload();
+        } catch (err) {
+            alert(err.message || 'Ulasan gagal dikirim. Coba lagi.');
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'Kirim Ulasan';
+        }
+    });
+});
+</script>
+
+<!-- JS FAVORITE TOGGLE -->
+<script>
+document.querySelectorAll('.btn-favorite').forEach(btn => {
+    btn.addEventListener('click', function () {
+        const wisataId = this.dataset.wisataId;
+        const button  = this;
+        const icon = button.querySelector('i');
+        const section = button.closest('.favorite-section');
+        const textDiv = section.querySelector('.favorite-text');
+
+        fetch("<?= base_url('favorit/toggle') ?>", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "wisata_id=" + wisataId
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success) {
+                alert(data.message);
+                return;
+            }
+            
+            // Update icon
+            if (data.favorited) {
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                button.title = 'Hapus dari Favorit';
+                textDiv.textContent = 'Hapus Favorit';
+            } else {
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                button.title = 'Tambah ke Favorit';
+                textDiv.textContent = 'Tambah Favorit';
+            }
+        })
+        .catch(err => {
+            console.error('Error:', err);
+            alert('Terjadi kesalahan, silakan coba lagi');
+        });
+    });
+});
+</script>

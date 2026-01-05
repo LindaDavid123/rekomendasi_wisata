@@ -85,7 +85,7 @@ class Wisata extends CI_Controller {
                 $this->session->userdata('user_id'),
                 $id
             );
-            $data['is_favorite'] = $this->favorit_model->is_favorited(
+            $data['is_favorite'] = $this->favorit_model->is_favorite(
                 $this->session->userdata('user_id'),
                 $id
             );
@@ -136,5 +136,48 @@ class Wisata extends CI_Controller {
         $this->wisata_model->update_rating($wisata_id);
         
         echo json_encode(['success' => true, 'message' => 'Rating berhasil disimpan']);
+    }
+
+    public function submit_review() {
+        $this->output->set_content_type('application/json');
+
+        if (!$this->session->userdata('user_id')) {
+            $this->output->set_status_header(401);
+            echo json_encode(['success' => false, 'message' => 'Silakan login terlebih dahulu']);
+            return;
+        }
+
+        $wisata_id = $this->input->post('wisata_id');
+        $review = trim((string) $this->input->post('review'));
+        $rating = $this->input->post('rating'); // optional, fallback ke 5
+
+        if (empty($wisata_id) || $review === '') {
+            $this->output->set_status_header(400);
+            echo json_encode(['success' => false, 'message' => 'Ulasan tidak boleh kosong']);
+            return;
+        }
+
+        // Pastikan destinasi wisata valid sebelum menyimpan ulasan
+        $wisata = $this->wisata_model->get_by_id($wisata_id);
+        if (!$wisata) {
+            $this->output->set_status_header(404);
+            echo json_encode(['success' => false, 'message' => 'Wisata tidak ditemukan']);
+            return;
+        }
+
+        $saved = $this->review_model->save_review(
+            $this->session->userdata('user_id'),
+            $wisata_id,
+            $review,
+            $rating ?: 5
+        );
+
+        if (!$saved) {
+            $this->output->set_status_header(500);
+            echo json_encode(['success' => false, 'message' => 'Ulasan gagal disimpan']);
+            return;
+        }
+
+        echo json_encode(['success' => true, 'message' => 'Ulasan berhasil dikirim']);
     }
 }

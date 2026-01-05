@@ -35,7 +35,7 @@ class Dashboard extends CI_Controller {
         $data['page'] = 'dashboard';
         
         // Get popular wisata
-        $data['popular_wisata'] = $this->wisata_model->get_popular(6);
+        $data['popular_wisata'] = $this->wisata_model->get_all();
         
         // Get newest wisata
         $data['newest'] = $this->wisata_model->get_newest(6);

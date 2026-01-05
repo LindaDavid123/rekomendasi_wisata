@@ -29,7 +29,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #e8eaf6 0%, #f3e5f5 50%, #e1f5fe 100%);
+            background: linear-gradient(135deg, #f0f5f2 0%, #e8f4f0 50%, #f0f8f6 100%);
             min-height: 100vh;
         }
         
@@ -145,6 +145,13 @@
             border-radius: 12px;
             object-fit: cover;
             box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            background: linear-gradient(135deg, #e3eafc 0%, #f8f9fa 100%); /* default bg */
+        }
+        .user-avatar[src*="girl.png"] {
+            background: linear-gradient(135deg, #ffe2f2 0%, #fff6fa 100%);
+        }
+        .user-avatar[src*="boy.png"] {
+            background: linear-gradient(135deg, #e2f0ff 0%, #f6fbff 100%);
         }
         
         .dashboard-grid {
@@ -159,6 +166,11 @@
             border-radius: 25px;
             padding: 30px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         }
         
         .card-header {
@@ -179,9 +191,29 @@
             color: #999;
             margin-top: 5px;
         }
+
+        /* Styling untuk form control */
+        .form-control {
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #4a6b3d;
+            box-shadow: 0 0 0 0.2rem rgba(74, 107, 61, 0.15);
+        }
+
+        /* Rating card hover effects */
+        #ratingForm label[for^="star"] {
+            transition: all 0.2s ease;
+        }
+
+        #ratingForm label[for^="star"]:hover {
+            text-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+        }
+        
         
         .category-card {
-            background: linear-gradient(135deg, #c3e4ed 0%, #d4f1f4 100%);
+            background: linear-gradient(135deg, #dfeee9 0%, #e8f5f2 100%);
             border-radius: 20px;
             padding: 20px;
             margin-bottom: 15px;
@@ -197,8 +229,8 @@
         }
         
         .category-card.budaya { background: linear-gradient(135deg, #ffd6a5 0%, #ffe4c4 100%); }
-        .category-card.alam { background: linear-gradient(135deg, #c3e4ed 0%, #d4f1f4 100%); }
-        .category-card.kuliner { background: linear-gradient(135deg, #d5c3e4 0%, #e4d4f1 100%); }
+        .category-card.alam { background: linear-gradient(135deg, #dfeee9 0%, #e8f5f2 100%); }
+        .category-card.kuliner { background: linear-gradient(135deg, #d5e4ed 0%, #e4f1f8 100%); }
         
         .category-title {
             font-size: 18px;
@@ -261,6 +293,35 @@
         #ratingForm label:hover {
             color: #f39c12 !important;
         }
+
+        /* Dashboard specific styling */
+        .dashboard-header {
+            background: none;
+            color: #2d3748;
+        }
+
+        .dashboard-content {
+            padding: 40px;
+        }
+
+        /* Smooth scrollbar styling */
+        div[style*="overflow-y: auto"]::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        div[style*="overflow-y: auto"]::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        div[style*="overflow-y: auto"]::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #4a6b3d 0%, #5a8f4a 100%);
+            border-radius: 10px;
+        }
+
+        div[style*="overflow-y: auto"]::-webkit-scrollbar-thumb:hover {
+            background: #3a5a2d;
+        }
     </style>
 </head>
 <body>
@@ -310,7 +371,7 @@
                 <div class="notif-icon">
                     <i class="fas fa-bell"></i>
                 </div>
-                <img src="<?= $this->session->userdata('foto') ? base_url('uploads/' . $this->session->userdata('foto')) : 'https://i.pravatar.cc/150?img=0' ?>" class="user-avatar" alt="User">
+                <img src="<?= get_user_image($this->session->userdata('foto') ?? $this->session->userdata('foto_profil') ?? null) ?>" class="user-avatar" alt="User">
             </div>
         </div>
         
@@ -345,18 +406,20 @@
         <!-- Bottom Grid -->
         <div class="bottom-grid">
             <!-- Rating Wisata -->
-            <div class="card">
-                <div class="card-header">
-                    <div>
-                        <h3 class="card-title">Berikan Rating</h3>
-                        <p class="card-subtitle">Rating wisata favorit Anda</p>
-                    </div>
+            <div class="card" style="border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+                <div class="card-header" style="background: linear-gradient(135deg, #4a6b3d 0%, #5a8f4a 100%); border-radius: 20px 20px 0 0; padding: 25px;">
+                    <h3 class="card-title" style="color: white; margin: 0; font-size: 18px; font-weight: 700;">
+                        <i class="fas fa-star me-2"></i>Berikan Rating
+                    </h3>
+                    <p style="color: rgba(255,255,255,0.8); margin: 5px 0 0 0; font-size: 13px;">Rating wisata favorit Anda untuk mendapat rekomendasi</p>
                 </div>
                 
-                <form id="ratingForm" method="POST" action="<?= base_url('wisata/submit_rating') ?>">
-                    <div style="margin-bottom: 15px;">
-                        <label class="form-label" style="font-weight: 600; color: #2d3748;">Pilih Destinasi</label>
-                        <select name="wisata_id" class="form-control" style="border-radius: 10px;" required>
+                <form id="ratingForm" method="POST" action="<?= base_url('wisata/submit_rating') ?>" style="padding: 25px;">
+                    <div style="margin-bottom: 20px;">
+                        <label class="form-label" style="font-weight: 700; color: #2d3748; margin-bottom: 10px; display: block;">
+                            <i class="fas fa-map-pin me-2" style="color: #4a6b3d;"></i>Pilih Destinasi
+                        </label>
+                        <select name="wisata_id" class="form-control" style="border-radius: 12px; border: 2px solid #e0e0e0; padding: 12px 15px; font-size: 14px; transition: all 0.3s;" required>
                             <option value="">-- Pilih Wisata --</option>
                             <?php if (!empty($popular_wisata)): ?>
                                 <?php foreach ($popular_wisata as $wisata): ?>
@@ -366,47 +429,56 @@
                         </select>
                     </div>
                     
-                    <div style="margin-bottom: 15px;">
-                        <label class="form-label" style="font-weight: 600; color: #2d3748;">Rating (1-5 Bintang)</label>
-                        <div style="display: flex; gap: 10px; font-size: 24px; cursor: pointer;">
+                    <div style="margin-bottom: 20px;">
+                        <label class="form-label" style="font-weight: 700; color: #2d3748; margin-bottom: 12px; display: block;">
+                            <i class="fas fa-heart me-2" style="color: #f39c12;"></i>Rating (1-5 Bintang)
+                        </label>
+                        <div style="display: flex; gap: 8px; font-size: 32px; cursor: pointer;">
                             <?php for ($i = 1; $i <= 5; $i++): ?>
                                 <input type="radio" name="rating" value="<?= $i ?>" id="star<?= $i ?>" style="display: none;" required>
-                                <label for="star<?= $i ?>" style="cursor: pointer; color: #ddd; transition: color 0.2s;" onclick="updateStars(<?= $i ?>)">★</label>
+                                <label for="star<?= $i ?>" style="cursor: pointer; color: #ddd; transition: all 0.2s; transform: scale(1);" onmouseover="previewStars(<?= $i ?>)" onmouseout="resetStars()" onclick="updateStars(<?= $i ?>)">★</label>
                             <?php endfor; ?>
                         </div>
                     </div>
                     
-                    <button type="submit" class="btn" style="width: 100%; background: linear-gradient(135deg, #4a6b3d 0%, #5a8f4a 100%); color: white; font-weight: 600; border-radius: 10px; padding: 10px;">Kirim Rating</button>
+                    <button type="submit" class="btn w-100" style="background: linear-gradient(135deg, #4a6b3d 0%, #5a8f4a 100%); color: white; font-weight: 700; border-radius: 12px; padding: 12px 20px; border: none; transition: all 0.3s; box-shadow: 0 4px 12px rgba(74, 107, 61, 0.3);">
+                        <i class="fas fa-paper-plane me-2"></i>Kirim Rating
+                    </button>
                 </form>
             </div>
             
             <!-- Riwayat Rating -->
-            <div class="card">
-                <div class="card-header">
-                    <div>
-                        <h3 class="card-title">Riwayat Rating</h3>
-                        <p class="card-subtitle">Rating yang Anda berikan</p>
-                    </div>
+            <div class="card" style="border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+                <div class="card-header" style="background: linear-gradient(135deg, #3a6ea5 0%, #7fb1e3 100%); border-radius: 20px 20px 0 0; padding: 25px;">
+                    <h3 class="card-title" style="color: white; margin: 0; font-size: 18px; font-weight: 700;">
+                        <i class="fas fa-history me-2"></i>Riwayat Rating
+                    </h3>
+                    <p style="color: rgba(255,255,255,0.8); margin: 5px 0 0 0; font-size: 13px;">Rating yang telah Anda berikan</p>
                 </div>
                 
-                <div style="max-height: 350px; overflow-y: auto;">
+                <div style="max-height: 400px; overflow-y: auto;">
                     <?php if (!empty($user_ratings)): ?>
                         <?php foreach ($user_ratings as $rating): ?>
-                            <div style="padding: 12px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center;">
-                                <div>
-                                    <div style="font-weight: 600; color: #2d3748; font-size: 14px;"><?= substr($rating['nama_wisata'], 0, 25) ?></div>
-                                    <div style="font-size: 12px; color: #999;"><?= date('d M Y', strtotime($rating['created_at'])) ?></div>
+                            <div style="padding: 16px 25px; border-bottom: 1px solid #f0f0f0; transition: all 0.3s; display: flex; justify-content: space-between; align-items: flex-start;">
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; color: #2d3748; font-size: 14px; margin-bottom: 6px;">
+                                        <i class="fas fa-mountain me-2" style="color: #3a6ea5;"></i><?= substr($rating['nama_wisata'], 0, 30) ?>
+                                    </div>
+                                    <div style="font-size: 12px; color: #999; display: flex; align-items: center; gap: 8px;">
+                                        <i class="fas fa-calendar-alt" style="color: #3a6ea5;"></i><?= format_datetime($rating['created_at']) ?>
+                                    </div>
                                 </div>
-                                <div style="color: #f39c12; font-size: 16px; font-weight: bold;">
+                                <div style="color: #f39c12; font-size: 16px; font-weight: bold; min-width: 100px; text-align: right;">
                                     <?php for ($i = 0; $i < $rating['rating']; $i++): ?>
-                                        ★
+                                        <i class="fas fa-star"></i>
                                     <?php endfor; ?>
                                 </div>
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <div style="text-align: center; padding: 20px; color: #999;">
-                            <p>Belum ada rating. Mulai berikan rating untuk mendapat rekomendasi!</p>
+                        <div style="text-align: center; padding: 40px 25px; color: #999;">
+                            <i class="fas fa-inbox" style="font-size: 32px; color: #ddd; margin-bottom: 15px; display: block;"></i>
+                            <p style="margin: 0;">Belum ada rating. Mulai berikan rating untuk mendapat rekomendasi!</p>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -472,13 +544,43 @@
 
 <script>
     function updateStars(rating) {
-        // Update visual feedback
+        // Update visual feedback dengan animasi
+        for (let i = 1; i <= 5; i++) {
+            const label = document.querySelector(`label[for="star${i}"]`);
+            const input = document.querySelector(`#star${i}`);
+            if (i <= rating) {
+                label.style.color = '#f39c12';
+                label.style.transform = 'scale(1.15)';
+                input.checked = true;
+            } else {
+                label.style.color = '#ddd';
+                label.style.transform = 'scale(1)';
+            }
+        }
+    }
+
+    function previewStars(rating) {
         for (let i = 1; i <= 5; i++) {
             const label = document.querySelector(`label[for="star${i}"]`);
             if (i <= rating) {
                 label.style.color = '#f39c12';
+                label.style.transform = 'scale(1.15)';
             } else {
                 label.style.color = '#ddd';
+                label.style.transform = 'scale(1)';
+            }
+        }
+    }
+
+    function resetStars() {
+        const checked = document.querySelector('#ratingForm input[type="radio"]:checked');
+        if (checked) {
+            updateStars(checked.value);
+        } else {
+            for (let i = 1; i <= 5; i++) {
+                const label = document.querySelector(`label[for="star${i}"]`);
+                label.style.color = '#ddd';
+                label.style.transform = 'scale(1)';
             }
         }
     }
@@ -487,19 +589,9 @@
     document.querySelectorAll('#ratingForm label[for^="star"]').forEach(label => {
         label.addEventListener('mouseover', function() {
             const starNum = this.getAttribute('for').replace('star', '');
-            updateStars(starNum);
+            previewStars(starNum);
         });
-    });
-
-    document.getElementById('ratingForm').addEventListener('mouseout', function() {
-        const checked = document.querySelector('#ratingForm input[type="radio"]:checked');
-        if (checked) {
-            updateStars(checked.value);
-        } else {
-            document.querySelectorAll('#ratingForm label[for^="star"]').forEach(label => {
-                label.style.color = '#ddd';
-            });
-        }
+        label.addEventListener('mouseout', resetStars);
     });
 
     // Reset visual saat form dimuat

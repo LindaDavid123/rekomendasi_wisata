@@ -53,4 +53,17 @@ class Rekomendasi extends CI_Controller {
         $this->load->view('rekomendasi/index', $data);
         $this->load->view('templates/footer');
     }
+    
+    /**
+     * Endpoint AJAX: Get real-time recommendations for user
+     */
+    public function get_realtime() {
+        if (!$this->session->userdata('user_id')) {
+            echo json_encode(['error' => 'Unauthorized']);
+            return;
+        }
+        $user_id = $this->session->userdata('user_id');
+        $recommendations = $this->recommendation_model->get_hybrid_recommendations($user_id, 10);
+        echo json_encode(['recommendations' => $recommendations]);
+    }
 }

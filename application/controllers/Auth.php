@@ -6,6 +6,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * Handle login, register, logout, dan Google OAuth
  */
 class Auth extends CI_Controller {
+        /**
+         * Redirect user to Google OAuth login page
+         */
+        public function google_login() {
+            // Gunakan library Google_oauth
+            $this->load->library('google_oauth');
+            $url = $this->google_oauth->get_auth_url();
+            if (!$url) {
+                show_error('Google OAuth belum dikonfigurasi.');
+            }
+            redirect($url);
+        }
     
     public function __construct() {
         parent::__construct();
@@ -27,6 +39,10 @@ class Auth extends CI_Controller {
             if ($this->form_validation->run()) {
                 $username = $this->input->post('username');
                 $password = $this->input->post('password');
+                $username_val = $this->input->post('username');
+                $email_val = $this->input->post('email');
+                $initials = strtoupper(substr(preg_replace('/[^A-Za-z0-9]/', '', $username_val ?: $email_val), 0, 3));
+                if (!$initials) { $initials = 'U'; }
                 
                 // Try login with username or email
                 $user = $this->user_model->login($username, $password);
@@ -38,13 +54,19 @@ class Auth extends CI_Controller {
                 
                 if ($user) {
                     // Set session
+                    $foto_value = $user['foto'] ?? ($user['foto_profil'] ?? null);
+                    if (!$foto_value) {
+                        $initials = strtoupper(substr(preg_replace('/[^A-Za-z0-9]/', '', $user['username'] ?? ''), 0, 3));
+                        $foto_value = 'initials:' . ($initials ?: 'U');
+                    }
                     $this->session->set_userdata([
                         'user_id' => $user['id'],
                         'username' => $user['username'],
-                        'nama' => $user['nama'],
+                        'nama' => $user['nama'] ?? ($user['nama_lengkap'] ?? $user['username']),
                         'email' => $user['email'],
                         'role' => $user['role'],
-                        'foto' => $user['foto'],
+                        'foto' => $foto_value,
+                        'foto_profil' => $foto_value,
                         'logged_in' => TRUE
                     ]);
                     
@@ -82,10 +104,16 @@ class Auth extends CI_Controller {
             $this->form_validation->set_rules('confirm_password', 'Konfirmasi Password', 'required|matches[password]');
             
             if ($this->form_validation->run()) {
+                $username_val = $this->input->post('username');
+                $email_val = $this->input->post('email');
+                $initials = strtoupper(substr(preg_replace('/[^A-Za-z0-9]/', '', $username_val ?: $email_val), 0, 3));
+                if (!$initials) { $initials = 'U'; }
+
                 $data = [
-                    'username' => $this->input->post('username'),
-                    'email' => $this->input->post('email'),
+                    'username' => $username_val,
+                    'email' => $email_val,
                     'password' => password_hash($this->input->post('password'), PASSWORD_BCRYPT),
+                    'foto_profil' => 'initials:' . $initials,
                     'role' => 'user',
                     'status' => 'active'
                 ];
@@ -114,20 +142,23 @@ class Auth extends CI_Controller {
             $this->session->set_flashdata('error', 'Invalid Google OAuth response');
             redirect('auth/login');
         }
-        
+
+        // Pastikan library google_oauth di-load
+        $this->load->library('google_oauth');
+
         $code = $this->input->get('code');
-        
+
         // Get access token
         $token_data = $this->google_oauth->get_access_token($code);
-        
+
         if (isset($token_data['error']) || !isset($token_data['access_token'])) {
             $this->session->set_flashdata('error', 'Failed to get access token from Google');
             redirect('auth/login');
         }
-        
+
         // Get user info
         $user_info = $this->google_oauth->get_user_info($token_data['access_token']);
-        
+
         if (isset($user_info['error'])) {
             $this->session->set_flashdata('error', 'Failed to get user info from Google');
             redirect('auth/login');
@@ -169,13 +200,19 @@ class Auth extends CI_Controller {
         }
         
         // Set session
+        $foto_value = $user['foto'] ?? ($user['foto_profil'] ?? null);
+        if (!$foto_value) {
+            $initials = strtoupper(substr(preg_replace('/[^A-Za-z0-9]/', '', $user['username'] ?? ''), 0, 3));
+            $foto_value = 'initials:' . ($initials ?: 'U');
+        }
         $this->session->set_userdata([
             'user_id' => $user['id'],
             'username' => $user['username'],
-            'nama' => $user['nama'],
+            'nama' => $user['nama'] ?? ($user['nama_lengkap'] ?? $user['username']),
             'email' => $user['email'],
             'role' => $user['role'],
-            'foto' => $user['foto'],
+            'foto' => $foto_value,
+            'foto_profil' => $foto_value,
             'logged_in' => TRUE
         ]);
         

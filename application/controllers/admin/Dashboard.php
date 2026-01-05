@@ -13,9 +13,9 @@ class Dashboard extends CI_Controller {
         $this->load->model('Rating_model');
         $this->load->model('Review_model');
         
-        // Check admin login
-        if (!$this->session->userdata('user_id') || $this->session->userdata('role') != 'admin') {
-            redirect('auth/login');
+        // Check admin login (hanya session admin)
+        if (!$this->session->userdata('admin_logged_in')) {
+            redirect('admin/auth/login');
         }
     }
     
@@ -28,7 +28,8 @@ class Dashboard extends CI_Controller {
             'total_reviews' => $this->db->count_all('reviews'),
             'recent_users' => $this->User_model->get_all(5),
             'recent_wisata' => $this->Wisata_model->get_newest(5),
-            'top_rated' => $this->Wisata_model->get_popular(5)
+            'top_rated' => $this->Wisata_model->get_popular(5),
+            'total_favorit' => $this->db->count_all('favorit')
         ];
         
         $this->load->view('templates/admin_header', $data);
@@ -88,5 +89,29 @@ class Dashboard extends CI_Controller {
                 ORDER BY total DESC";
         
         return $this->db->query($sql)->result_array();
+    }
+    
+    /**
+     * Endpoint AJAX: Get real-time statistics and recent users
+     */
+    public function get_stats() {
+        if (!$this->session->userdata('admin_logged_in')) {
+            echo json_encode(['error' => 'Unauthorized']);
+            return;
+        }
+        $recent_users_raw = $this->User_model->get_recent_users(5);
+        $recent_users = array_map(function($user) {
+            $user['created_at'] = date('d M Y H:i', strtotime($user['created_at']));
+            return $user;
+        }, $recent_users_raw);
+        $stats = [
+            'total_wisata' => $this->Wisata_model->count_all(),
+            'total_users' => $this->User_model->count_all(),
+            'total_ratings' => $this->db->count_all('rating'),
+            'total_reviews' => $this->db->count_all('reviews'),
+            'total_favorit' => $this->db->count_all('favorit'),
+            'recent_users' => $recent_users,
+        ];
+        echo json_encode($stats);
     }
 }

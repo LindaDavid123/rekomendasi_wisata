@@ -1,266 +1,446 @@
-<style>
-    .auth-page {
-        min-height: 100vh;
-        background: #E8E4DC;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem;
-    }
-    .auth-container {
-        max-width: 1100px;
-        width: 100%;
-        background: white;
-        border-radius: 20px;
-        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
-        overflow: hidden;
-    }
-    @media (max-width: 992px) {
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Wisata Jogja</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .auth-page {
+            min-height: 100vh;
+            background: #E8E4DC;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
         .auth-container {
-            border-radius: 15px;
+            max-width: 1100px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease-out;
         }
-    }
-    .auth-left {
-        background: linear-gradient(135deg, #D5D1C6 0%, #e0dcd1 100%);
-        padding: 4rem 3rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-        overflow: hidden;
-        min-height: 650px;
-    }
-    @media (max-width: 992px) {
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .auth-container {
+                border-radius: 15px;
+            }
+        }
+        
         .auth-left {
-            min-height: 400px;
-            padding: 2.5rem 2rem;
+            background: linear-gradient(135deg, #C8C3B8 0%, #D5D1C6 50%, #e0dcd1 100%);
+            padding: 4rem 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 650px;
         }
-    }
-    .auth-left::before {
-        content: '';
-        position: absolute;
-        width: 500px;
-        height: 500px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 50%;
-        bottom: -250px;
-        left: -150px;
-    }
-    .auth-logo {
-        font-size: 1.4rem;
-        font-weight: 800;
-        color: #2d2d2d;
-        margin-bottom: 2.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.8rem;
-        text-align: center;
-    }
-    .icon-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.2rem;
-        margin: 2.5rem 0;
-        max-width: 320px;
-        width: 100%;
-    }
-    .icon-box {
-        background: rgba(255, 255, 255, 0.8);
-        border-radius: 16px;
-        padding: 1.4rem;
-        text-align: center;
-        font-size: 2.2rem;
-        transition: all 0.3s ease;
-        border: 2px solid rgba(255, 255, 255, 0.4);
-        aspect-ratio: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-    }
-    .icon-box:hover {
-        transform: translateY(-5px) scale(1.05);
-        background: white;
-    }
-    .auth-heading {
-        font-size: 1.8rem;
-        font-weight: 800;
-        color: #2d2d2d;
-        margin-bottom: 0.8rem;
-        text-align: center;
-    }
-    .auth-subtitle {
-        color: #777;
-        text-align: center;
-        font-size: 0.95rem;
-        line-height: 1.6;
-    }
-    .auth-right {
-        padding: 4rem 3.5rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        background: white;
-        min-height: 650px;
-    }
-    @media (max-width: 992px) {
+        
+        @media (max-width: 992px) {
+            .auth-left {
+                min-height: 400px;
+                padding: 2.5rem 2rem;
+            }
+        }
+        
+        .auth-left::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            bottom: -250px;
+            left: -150px;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .auth-left::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: -200px;
+            right: -100px;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(20px, -20px); }
+        }
+        
+        .auth-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #2d2d2d;
+            margin-bottom: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            text-align: center;
+            z-index: 1;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+            margin: 2.5rem 0;
+            max-width: 320px;
+            width: 100%;
+            z-index: 1;
+        }
+        
+        .icon-box {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            padding: 1.4rem;
+            text-align: center;
+            font-size: 2.2rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+        }
+        
+        .icon-box:hover {
+            transform: translateY(-8px) scale(1.08);
+            background: white;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .auth-heading {
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: #2d2d2d;
+            margin-bottom: 0.8rem;
+            text-align: center;
+            z-index: 1;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .auth-subtitle {
+            color: #666;
+            text-align: center;
+            font-size: 1rem;
+            line-height: 1.6;
+            z-index: 1;
+        }
+        
         .auth-right {
-            min-height: auto;
-            padding: 2.5rem 2rem;
+            padding: 4rem 3.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            min-height: 650px;
         }
-    }
-    .form-wrapper {
-        width: 100%;
-        max-width: 380px;
-    }
-    .auth-title {
-        font-size: 2.2rem;
-        font-weight: 900;
-        color: #1a1a1a;
-        margin-bottom: 0.8rem;
-        text-align: left;
-    }
-    .auth-subtitle-form {
-        color: #888;
-        font-size: 0.95rem;
-        margin-bottom: 2rem;
-        text-align: left;
-        line-height: 1.6;
-    }
-    .form-label {
-        font-weight: 700;
-        color: #2d2d2d;
-        margin-bottom: 0.6rem;
-        font-size: 0.92rem;
-        display: block;
-    }
-    .form-control {
-        border: 2px solid #e0e0e0;
-        border-radius: 12px;
-        padding: 0.75rem 1rem;
-        padding-left: 3rem;
-        font-size: 0.9rem;
-        transition: all 0.3s;
-        width: 100%;
-    }
-    .form-control:focus {
-        border-color: #5a8f4a;
-        box-shadow: 0 0 0 3px rgba(90, 143, 74, 0.1);
-    }
-    .input-group {
-        position: relative;
-    }
-    .input-icon {
-        position: absolute;
-        left: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #999;
-        z-index: 10;
-    }
-    .btn-login {
-        background: #2d2d2d;
-        color: white;
-        border: none;
-        border-radius: 50px;
-        padding: 0.9rem;
-        font-weight: 700;
-        font-size: 0.95rem;
-        transition: all 0.3s;
-        margin-top: 1.5rem;
-        width: 100%;
-    }
-    .btn-login:hover {
-        background: #1a1a1a;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        color: white;
-    }
-    .divider {
-        text-align: center;
-        margin: 1.2rem 0;
-        position: relative;
-    }
-    .divider::before,
-    .divider::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        width: 45%;
-        height: 1px;
-        background: #e0e0e0;
-    }
-    .divider::before { left: 0; }
-    .divider::after { right: 0; }
-    .divider span {
-        background: white;
-        padding: 0 1rem;
-        color: #999;
-        font-size: 0.85rem;
-    }
-    .btn-google, .btn-apple {
-        border: 2px solid #D5D1C6;
-        background: white;
-        color: #2d2d2d;
-        border-radius: 50px;
-        padding: 0.8rem;
-        font-weight: 600;
-        font-size: 0.9rem;
-        transition: all 0.3s;
-        margin-bottom: 0.8rem;
-        text-decoration: none;
-        display: block;
-        text-align: center;
-        width: 100%;
-    }
-    .btn-google:hover, .btn-apple:hover {
-        border-color: #2d2d2d;
-        background: #E8E4DC;
-        color: #2d2d2d;
-        transform: translateY(-2px);
-    }
-    .forgot-link {
-        color: #666;
-        text-decoration: none;
-        font-size: 0.9rem;
-        float: right;
-        margin-top: 0.25rem;
-    }
-    .forgot-link:hover {
-        color: #2d2d2d;
-        text-decoration: underline;
-    }
-    .signup-link {
-        text-align: center;
-        margin-top: 1.2rem;
-        color: #666;
-        font-size: 0.9rem;
-    }
-    .signup-link a {
-        color: #2d2d2d;
-        font-weight: 600;
-        text-decoration: none;
-    }
-    .signup-link a:hover {
-        text-decoration: underline;
-    }
-    .auth-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr;
-    }
-    @media (max-width: 992px) {
+        
+        @media (max-width: 992px) {
+            .auth-right {
+                min-height: auto;
+                padding: 2.5rem 2rem;
+            }
+        }
+        
+        .form-wrapper {
+            width: 100%;
+            max-width: 380px;
+        }
+        
+        .auth-title {
+            font-size: 2.3rem;
+            font-weight: 900;
+            color: #1a1a1a;
+            margin-bottom: 0.8rem;
+            text-align: left;
+        }
+        
+        .auth-subtitle-form {
+            color: #888;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            text-align: left;
+            line-height: 1.6;
+        }
+        
+        .form-label {
+            font-weight: 700;
+            color: #2d2d2d;
+            margin-bottom: 0.6rem;
+            font-size: 0.92rem;
+            display: block;
+        }
+        
+        .form-control {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            padding-left: 3rem;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            background: #fafafa;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #5a8f4a;
+            box-shadow: 0 0 0 4px rgba(90, 143, 74, 0.1);
+            background: white;
+        }
+        
+        .form-control::placeholder {
+            color: #999;
+        }
+        
+        .input-group {
+            position: relative;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            z-index: 10;
+            font-size: 1rem;
+        }
+        
+        .btn-login {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 1rem;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin-top: 1.5rem;
+            width: 100%;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-login:hover {
+            background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+        }
+        
+        .btn-login:active {
+            transform: translateY(-1px);
+        }
+        
+        .divider {
+            text-align: center;
+            margin: 1.2rem 0;
+            position: relative;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: #e0e0e0;
+        }
+        
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+        
+        .divider span {
+            background: white;
+            padding: 0 1rem;
+            color: #999;
+            font-size: 0.85rem;
+        }
+        
+        .btn-google, .btn-apple {
+            border: 2px solid #D5D1C6;
+            background: white;
+            color: #2d2d2d;
+            border-radius: 50px;
+            padding: 0.85rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            margin-bottom: 0.8rem;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            width: 100%;
+            cursor: pointer;
+        }
+        
+        .btn-google:hover, .btn-apple:hover {
+            border-color: #2d2d2d;
+            background: #E8E4DC;
+            color: #2d2d2d;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .forgot-link {
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9rem;
+            float: right;
+            margin-top: 0.4rem;
+            transition: all 0.3s ease;
+        }
+        
+        .forgot-link:hover {
+            color: #5a8f4a;
+            text-decoration: underline;
+        }
+        
+        .signup-link {
+            text-align: center;
+            margin-top: 1.2rem;
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        .signup-link a {
+            color: #2d2d2d;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .signup-link a:hover {
+            color: #5a8f4a;
+            text-decoration: underline;
+        }
+        
+        .alert {
+            border-radius: 12px;
+            border: none;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            font-size: 0.9rem;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .alert-danger {
+            background: #fee;
+            color: #c33;
+            border-left: 4px solid #c33;
+        }
+        
+        .alert-success {
+            background: #efe;
+            color: #3c3;
+            border-left: 4px solid #3c3;
+        }
+        
+        .mb-2 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .mb-3 {
+            margin-bottom: 1.3rem;
+        }
+        
+        .mb-4 {
+            margin-bottom: 1.8rem;
+        }
+        
+        .mt-3 {
+            margin-top: 1.3rem;
+        }
+        
         .auth-row {
-            grid-template-columns: 1fr;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr;
         }
-    }
-</style>
-
-<div class="auth-page">
-    <div class="auth-container">
-        <div class="auth-row">
+        
+        @media (max-width: 992px) {
+            .auth-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .me-2 {
+            margin-right: 0.5rem;
+        }
+        
+        .w-100 {
+            width: 100%;
+        }
+        
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+        
+        .text-danger {
+            color: #dc3545;
+            font-size: 0.85rem;
+            margin-top: 0.4rem;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-page">
+        <div class="auth-container">
+            <div class="auth-row">
                 <!-- Left Side - Info -->
                 <div class="auth-left">
                     <div class="auth-logo">
@@ -283,67 +463,53 @@
                 <!-- Right Side - Form -->
                 <div class="auth-right">
                     <div class="form-wrapper">
-                        <h1 class="auth-title">Login</h1>
-                        <p class="auth-subtitle-form">Selamat datang kembali! Silakan masuk ke akun Anda</p>
-                    
-                    <?php if ($this->session->flashdata('error')): ?>
-                        <div class="alert alert-danger alert-dismissible fade show">
-                            <?= $this->session->flashdata('error') ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    <?php endif; ?>
-                    
-                    <?php if ($this->session->flashdata('success')): ?>
-                        <div class="alert alert-success alert-dismissible fade show">
-                            <?= $this->session->flashdata('success') ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    <?php endif; ?>
-                    
-                    <?= form_open('auth/login') ?>
-                        <div class="mb-3">
-                            <label class="form-label">Username atau Email</label>
-                            <div class="input-group">
-                                <i class="fas fa-user input-icon"></i>
-                                <input type="text" name="username" class="form-control" placeholder="Masukkan username atau email" required value="<?= set_value('username') ?>">
+                        <h1 class="auth-title mb-2">Masuk ke Akun Anda</h1>
+                        <p class="auth-subtitle-form mb-4">Selamat datang kembali! Silakan login untuk melanjutkan eksplorasi wisata Jogja.</p>
+
+                        <!-- Alert Example (uncomment for demo) -->
+                        <!-- <div class="alert alert-danger">
+                            Username atau password salah
+                        </div> -->
+                        
+                        <!-- <div class="alert alert-success">
+                            Registrasi berhasil! Silakan login
+                        </div> -->
+
+
+                        <div class="divider"><span>atau login dengan akun</span></div>
+
+                        <form method="post" action="<?= base_url('auth/login') ?>">
+                            <div class="mb-3">
+                                <label class="form-label" for="username">Username atau Email</label>
+                                <div class="input-group">
+                                    <i class="fas fa-user input-icon"></i>
+                                    <input type="text" id="username" name="username" class="form-control" placeholder="Masukkan username atau email" required>
+                                </div>
+                                <!-- <small class="text-danger">Username atau email tidak ditemukan</small> -->
                             </div>
-                            <?= form_error('username', '<small class="text-danger">', '</small>') ?>
-                        </div>
-                        
-                        <div class="mb-2">
-                            <label class="form-label">Password</label>
-                            <div class="input-group">
-                                <i class="fas fa-lock input-icon"></i>
-                                <input type="password" name="password" class="form-control" placeholder="Masukkan password" required>
+                            <div class="mb-2">
+                                <label class="form-label" for="password">Password</label>
+                                <div class="input-group">
+                                    <i class="fas fa-lock input-icon"></i>
+                                    <input type="password" id="password" name="password" class="form-control" placeholder="Masukkan password" required>
+                                </div>
+                                <!-- <small class="text-danger">Password salah</small> -->
                             </div>
-                            <?= form_error('password', '<small class="text-danger">', '</small>') ?>
+                            <a href="#" class="forgot-link">Lupa Password?</a>
+                            <div class="clearfix"></div>
+                            <button type="submit" class="btn btn-login w-100">Masuk</button>
+                        </form>
+                        <a href="<?= base_url('auth/google_login') ?>" class="btn btn-google w-100 mb-2 mt-2">
+                            <i class="fab fa-google me-2"></i> Masuk dengan Google
+                        </a>
+
+                        <div class="signup-link mt-3">
+                            Belum punya akun? <a href="#register">Daftar di sini</a>
                         </div>
-                        
-                        <a href="#" class="forgot-link">Forgot Password?</a>
-                        <div class="clearfix"></div>
-                        
-                        <button type="submit" class="btn btn-login w-100">Log In</button>
-                    <?= form_close() ?>
-                    
-                    <div class="divider">
-                        <span>or</span>
-                    </div>
-                    
-                    <a href="#" class="btn btn-google w-100" onclick="alert('Google OAuth belum dikonfigurasi'); return false;">
-                        <i class="fab fa-google me-2"></i> Continue with Google
-                    </a>
-                    
-                    <a href="#" class="btn btn-apple w-100" onclick="alert('Apple Sign-in belum tersedia'); return false;">
-                        <i class="fab fa-apple me-2"></i> Continue with Apple
-                    </a>
-                    
-                    <div class="signup-link">
-                        Belum punya akun? <a href="<?= base_url('auth/register') ?>">Daftar di sini</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-
+</body>
+</html>

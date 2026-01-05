@@ -1,4 +1,4 @@
-
+<!-- LANDING PAGE untuk visitor (belum login) -->
 <style>
         body {
             overflow-x: hidden;
@@ -326,8 +326,5 @@
                 </div>
             </div>
         </div>
-        
-    </section>            
-            
-    
+    </section>
 

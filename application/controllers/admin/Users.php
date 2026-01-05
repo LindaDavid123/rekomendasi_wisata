@@ -10,9 +10,9 @@ class Users extends CI_Controller {
         parent::__construct();
         $this->load->model('User_model');
         
-        // Check admin login
-        if (!$this->session->userdata('user_id') || $this->session->userdata('role') != 'admin') {
-            redirect('auth/login');
+        // Check admin login (hanya session admin)
+        if (!$this->session->userdata('admin_logged_in')) {
+            redirect('admin/auth/login');
         }
     }
     

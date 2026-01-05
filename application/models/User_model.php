@@ -6,6 +6,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * Handle user data and authentication
  */
 class User_model extends CI_Model {
+        public function get_recent_users($limit = 5) {
+            $this->db->order_by('created_at', 'DESC');
+            $this->db->limit($limit);
+            return $this->db->get($this->table)->result_array();
+        }
     
     private $table = 'users';
     
@@ -78,6 +83,7 @@ class User_model extends CI_Model {
         if ($limit) {
             $this->db->limit($limit, $offset);
         }
+        $this->db->order_by('created_at', 'DESC');
         return $this->db->get($this->table)->result_array();
     }
     

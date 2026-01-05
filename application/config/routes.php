@@ -40,6 +40,7 @@ $route['auth/google_callback'] = 'auth/google_callback';
 $route['wisata'] = 'wisata/index';
 $route['wisata/detail/(:num)'] = 'wisata/detail/$1';
 $route['wisata/submit_rating'] = 'wisata/submit_rating';
+$route['wisata/submit_review'] = 'wisata/submit_review';
 
 // Recommendation routes
 $route['rekomendasi'] = 'rekomendasi/index';
@@ -56,5 +57,8 @@ $route['profil/update'] = 'profil/update';
 // Admin routes
 $route['admin'] = 'admin/dashboard/index';
 $route['admin/dashboard'] = 'admin/dashboard/index';
-$route['admin/wisata'] = 'admin/wisata_admin/index';
+$route['admin/wisata'] = 'admin/wisata/index';
+$route['admin/wisata/tambah'] = 'admin/wisata/tambah';
+$route['admin/wisata/edit/(:num)'] = 'admin/wisata/edit/$1';
+$route['admin/wisata/hapus/(:num)'] = 'admin/wisata/hapus/$1';
 $route['admin/users'] = 'admin/users/index';

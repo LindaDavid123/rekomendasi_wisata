@@ -124,7 +124,8 @@ class Recommendation_model extends CI_Model {
         // Calculate predicted ratings
         foreach ($recommendations as $wisata_id => &$rec) {
             if ($rec['similarity_sum'] > 0) {
-                $rec['predicted_rating'] = $rec['weighted_sum'] / $rec['similarity_sum'];
+                $rec['predicted_rating'] = 
+                $rec['weighted_sum'] / $rec['similarity_sum'];
             } else {
                 $rec['predicted_rating'] = 0;
             }
@@ -189,7 +190,7 @@ class Recommendation_model extends CI_Model {
                 
                 // Weight similarity by user's rating score
                 // Higher ratings give more weight to similar items
-                $weighted_similarity = $item['similarity'] * ($rating_score / 5.0);
+                $weighted_similarity = $item['similarity_score'] * ($rating_score / 5.0);
                 $recommendations[$similar_wisata_id] += $weighted_similarity;
             }
         }

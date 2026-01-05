@@ -117,11 +117,20 @@ body {
 
 .pagination .page-link {
     color: var(--primary-color);
+    transition: background 0.2s, color 0.2s;
+}
+
+.pagination .page-link:focus,
+.pagination .page-link:active {
+    background-color: #4a6b3d !important;
+    color: #fff !important;
+    border-color: #4a6b3d !important;
 }
 
 .pagination .page-item.active .page-link {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
+    background-color: #4a6b3d;
+    border-color: #4a6b3d;
+    color: #fff;
 }
 
 /* Footer */
