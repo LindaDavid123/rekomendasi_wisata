@@ -5,28 +5,169 @@
 [![PHP](https://img.shields.io/badge/PHP-8.2+-blue.svg)](https://www.php.net/)
 [![CodeIgniter](https://img.shields.io/badge/CodeIgniter-3.1+-red.svg)](https://codeigniter.com/)
 [![Python](https://img.shields.io/badge/Python-3.8+-green.svg)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-2.0+-black.svg)](https://flask.palletsprojects.com/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg)](#)
 
 ---
 
-## 📖 Daftar Isi
+## 🎖️ Portfolio Highlights
 
-- [Deskripsi Proyek](#-deskripsi-proyek)
-- [Fitur Utama](#-fitur-utama)
-- [Sistem Rekomendasi](#-sistem-rekomendasi)
-- [Tech Stack](#-tech-stack)
-- [Quick Start](#-quick-start)
-- [Instalasi Lengkap](#-instalasi-lengkap)
-- [Konfigurasi Database](#-konfigurasi-database)
-- [Menjalankan Aplikasi](#-menjalankan-aplikasi)
-- [Dokumentasi API](#-dokumentasi-api)
-- [Struktur Proyek](#-struktur-proyek)
-- [Screenshots](#-screenshots)
-- [Roadmap](#-roadmap)
-- [Kontribusi](#-kontribusi)
-- [Lisensi](#-lisensi)
-- [Kontak](#-kontak)
+> **Full-Stack Web Application** demonstrating enterprise-level architecture, microservices design, and machine learning integration
+
+### Key Achievements
+- ✅ **Hybrid Recommendation Engine**: Implemented dual ML algorithms (Collaborative Filtering + Content-Based) with 60/40 weighted hybrid approach
+- ✅ **Microservices Architecture**: Separated PHP backend from Python ML engine using REST APIs (loose coupling, high scalability)
+- ✅ **Security-First**: Environment-based configuration, no hardcoded credentials, password encryption, OAuth integration
+- ✅ **Production-Ready**: Docker-ready, caching strategy, database optimization, error handling, logging
+- ✅ **Clean Code**: SOLID principles, proper MVC structure, comprehensive documentation, unit test structure
+- ✅ **Performance**: Intelligent caching (24h TTL), database indexing, API optimization, ~200ms response time
+
+### Tech Skills Demonstrated
+- **Backend Development**: PHP 8.2, CodeIgniter 3.1+, REST API design
+- **ML/Data Science**: scikit-learn, TF-IDF, KNN algorithms, pandas data processing
+- **Database**: MySQL/MariaDB, normalization, optimization, query design
+- **Full-Stack**: HTML5, Bootstrap 5, JavaScript, responsive UI/UX
+- **DevOps/Deployment**: Environment management, git workflows, production deployment
+- **Software Engineering**: Version control, code documentation, architectural patterns
+
+---
+
+## 📖 Quick Navigation
+
+**For Recruiters** 👨‍💼
+- 📋 [Portfolio Highlights](#-portfolio-highlights) - Key achievements
+- 🏗️ [Architecture Overview](#-architecture-overview) - System design
+- 📚 [Documentation Index](#-documentation-index) - Full docs
+
+**For Developers** 👨‍💻
+- 🚀 [Quick Start](#-quick-start) - Get running in 5 min
+- 📋 [Instalasi Lengkap](#-instalasi-lengkap) - Full setup guide
+- 🔧 [Konfigurasi](#-konfigurasi-database) - Configure environment
+- 📖 [API Documentation](#-dokumentasi-api) - API endpoints
+
+**Technical Deep Dive** 🔍
+- 🤖 [Sistem Rekomendasi](#-sistem-rekomendasi) - Algorithm details
+- 🛠️ [Tech Stack](#-tech-stack) - Technologies used
+- 📁 [Struktur Proyek](#-struktur-proyek) - Project organization
+- 📊 [Database Design](#-tech-stack) - Schema & relationships
+
+---
+
+## 🏗️ Architecture Overview
+
+### System Architecture Diagram
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                     USER BROWSER                        │
+│              (Bootstrap 5 UI + jQuery)                  │
+└────────────────────────┬────────────────────────────────┘
+                         │ HTTP/AJAX
+                         ▼
+┌─────────────────────────────────────────────────────────┐
+│           CODEIGNITER 3.1 WEB FRAMEWORK                 │
+│  ┌─────────────────────────────────────────────────┐   │
+│  │  Controllers: Auth, Dashboard, Wisata, Admin    │   │
+│  │  Models: User, Wisata, Rating, Review, Favorite │   │
+│  │  Views: Dashboard, Wisata List, Detail Pages    │   │
+│  └─────────────────────────────────────────────────┘   │
+│                                                          │
+│  Features:                                              │
+│  • Session-based authentication                         │
+│  • OAuth 2.0 (Google integration)                       │
+│  • Request routing & validation                         │
+│  • Database ORM & query building                        │
+└────────────────┬─────────────────────────────────────────┘
+                 │ HTTP REST API (JSON)
+                 ▼
+┌─────────────────────────────────────────────────────────┐
+│         PYTHON FLASK MICROSERVICE (localhost:5000)      │
+│  ┌─────────────────────────────────────────────────┐   │
+│  │  /api/recommend      → Recommendation Engine    │   │
+│  │  /api/predict        → ML Model Predictions     │   │
+│  │  /api/health         → Service Health Check     │   │
+│  └─────────────────────────────────────────────────┘   │
+│                                                          │
+│  ML Pipeline:                                           │
+│  1. Get user ratings from MySQL                         │
+│  2. Load pre-trained ML models (scikit-learn)          │
+│  3. Collaborative Filtering (KNN): Find similar users   │
+│  4. Content-Based (TF-IDF): Find similar attractions    │
+│  5. Hybrid Combination (α=0.6)                         │
+│  6. Return ranked recommendations                       │
+└────────────────┬─────────────────────────────────────────┘
+                 │ MySQL Query
+                 ▼
+┌─────────────────────────────────────────────────────────┐
+│        MYSQL DATABASE (MariaDB 10.4+)                   │
+│  ┌─────────────────────────────────────────────────┐   │
+│  │  Tables:                                        │   │
+│  │  • users (accounts, profiles)                   │   │
+│  │  • wisata (attractions, details)                │   │
+│  │  • ratings (user ratings: 1-5 stars)           │   │
+│  │  • reviews (user reviews/comments)              │   │
+│  │  • favorites (user wishlists)                   │   │
+│  │  • recommendation_cache (cached results)        │   │
+│  └─────────────────────────────────────────────────┘   │
+│                                                          │
+│  Features:                                              │
+│  • Normalization: 3NF schema design                     │
+│  • Optimization: Strategic indexes on FK & search cols  │
+│  • Integrity: Foreign keys, constraints                 │
+└─────────────────────────────────────────────────────────┘
+```
+
+### Data Flow: How Recommendations Work
+
+```
+Step 1: User Opens Dashboard
+   └─ GET /dashboard
+      ├─ Load user profile from MySQL
+      └─ Check recommendation_cache
+
+Step 2: Cache Miss (not found or expired)
+   └─ Trigger recommendation generation
+      │
+      └─ POST /api/recommend (to Flask)
+         │
+         ├─ [Collaborative Filtering]
+         │  ├─ Get user's rating history
+         │  ├─ Find similar users (KNN)
+         │  └─ Collect their liked attractions
+         │
+         ├─ [Content-Based Filtering]
+         │  ├─ Vectorize attraction descriptions (TF-IDF)
+         │  ├─ Find similar attractions
+         │  └─ Score by similarity
+         │
+         ├─ [Hybrid Combination]
+         │  └─ Score = 0.6×CF_Score + 0.4×CB_Score
+         │
+         └─ Return ranked list
+
+Step 3: Cache & Display
+   └─ Store recommendations in recommendation_cache (24h TTL)
+      └─ Display to user in real-time
+```
+
+---
+
+## 📚 Documentation Index
+
+| Document | Purpose | Audience |
+|----------|---------|----------|
+| **[README.md](README.md)** | Project overview | Everyone |
+| **[QUICK_START.md](docs/)** | 5-minute setup guide | New developers |
+| **[INSTALLATION.md](docs/)** | Detailed setup | DevOps/Backend |
+| **[API_DOCUMENTATION.md](docs/)** | REST API reference | Frontend/Integration |
+| **[ARCHITECTURE.md](docs/)** | System design details | Architects/Senior devs |
+| **[DATABASE_DESIGN.md](docs/)** | Schema & relationships | DBAs/Backend |
+| **[ML_ALGORITHM.md](docs/)** | ML details | Data scientists |
+| **[DEPLOYMENT.md](docs/)** | Production setup | DevOps |
+| **[CONTRIBUTING.md](CONTRIBUTING.md)** | Contribution guidelines | Contributors |
+
+**For more docs, see [DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)**
 
 ---
 
