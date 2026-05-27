@@ -1,0 +1,218 @@
+# =============================================================================
+# PROJECT: Rekomendasi Wisata - Tourism Recommendation System
+# .gitignore file for GitHub repository
+# =============================================================================
+
+# =============================================================================
+# 1. IDE / EDITOR FILES
+# =============================================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-workspace
+*.sublime-project
+.DS_Store
+Thumbs.db
+.env.local
+.env.*.local
+
+# =============================================================================
+# 2. OS FILES
+# =============================================================================
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+
+# =============================================================================
+# 3. CODEIGNITER FRAMEWORK - Cache & Session (CRITICAL)
+# =============================================================================
+# Session files (temporary, should not be tracked)
+application/cache/ci_session*
+application/cache/*.cache
+
+# Log files (temporary)
+application/logs/*
+!application/logs/.gitkeep
+
+# CI cache
+application/cache/*
+!application/cache/.gitkeep
+!application/cache/index.html
+
+# =============================================================================
+# 4. CODEIGNITER - Configuration Files (SENSITIVE)
+# =============================================================================
+# Database configuration with credentials
+application/config/database.php
+application/config/email.php
+
+# Environment-specific configs
+.env
+.env.local
+.env.*.local
+
+# User-uploaded sensitive files
+uploads/*
+!uploads/.gitkeep
+!uploads/README.txt
+
+# =============================================================================
+# 5. PYTHON ENVIRONMENT & DEPENDENCIES
+# =============================================================================
+# Python virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# Python compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Python egg information
+*.egg-info/
+*.egg
+.eggs/
+
+# PIP
+pip-log.txt
+pip-delete-this-directory.txt
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# =============================================================================
+# 6. NODE.JS (if added in future)
+# =============================================================================
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# =============================================================================
+# 7. LARAVEL/PHP (if migrated)
+# =============================================================================
+vendor/
+composer.lock
+
+# =============================================================================
+# 8. DATABASE FILES
+# =============================================================================
+# SQLite databases (if used)
+*.db
+*.sqlite
+*.sqlite3
+
+# MySQL dumps (keep the schema file in database/ but ignore local backups)
+database/backups/*
+!database/backups/.gitkeep
+
+# =============================================================================
+# 9. BUILD & DISTRIBUTION
+# =============================================================================
+dist/
+build/
+*.tar.gz
+*.zip
+
+# =============================================================================
+# 10. TEMPORARY FILES
+# =============================================================================
+*.tmp
+*.temp
+*.bak
+*.backup
+*.orig
+*.rej
+.DS_Store
+
+# =============================================================================
+# 11. COMPILED FILES
+# =============================================================================
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# =============================================================================
+# 12. VIRTUAL MACHINE / DOCKER (if used)
+# =============================================================================
+.vagrant/
+.vagrant
+Vagrantfile
+docker-compose.override.yml
+
+# =============================================================================
+# 13. CI/CD PIPELINE (if used)
+# =============================================================================
+.github/workflows/*secret*
+.gitlab-ci.yml (tracked, but secrets not tracked)
+.travis.yml (tracked, but secrets not tracked)
+
+# =============================================================================
+# 14. DOCUMENTATION BUILD FILES
+# =============================================================================
+docs/_build/
+docs/.doctrees/
+site/
+
+# =============================================================================
+# 15. APPLICATION-SPECIFIC IGNORES
+# =============================================================================
+
+# Temporary recommendation cache (if stored as files)
+cache/recommendations/*
+!cache/recommendations/.gitkeep
+
+# Temporary uploads
+assets/uploads/*
+!assets/uploads/.gitkeep
+
+# API logs
+logs/api/*
+!logs/api/.gitkeep
+
+# =============================================================================
+# 16. SYSTEM FILES
+# =============================================================================
+.htaccess.local
+web.config.local
+
+# =============================================================================
+# EXCEPTIONS (Files/folders to ALWAYS track)
+# =============================================================================
+# Keep these files even if they match ignore patterns above:
+# !.gitkeep
+# !README.txt
+# !.env.example
+
