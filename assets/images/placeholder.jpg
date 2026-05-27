@@ -1,0 +1,27 @@
+<?php
+// Create a simple placeholder image using GD library
+$width = 800;
+$height = 600;
+
+// Create image
+$image = imagecreatetruecolor($width, $height);
+
+// Set colors
+$bgColor = imagecolorallocate($image, 245, 244, 238); // Light beige
+$textColor = imagecolorallocate($image, 150, 150, 150); // Gray
+
+// Fill background
+imagefill($image, 0, 0, $bgColor);
+
+// Add text
+$text = "Placeholder Image";
+$fontPath = __DIR__ . '/../../fonts/arial.ttf'; // Adjust path as needed
+
+// Fallback: use built-in font if no TTF available
+imagestring($image, 5, $width/2 - 60, $height/2 - 10, $text, $textColor);
+
+// Output as PNG
+header('Content-Type: image/png');
+imagepng($image);
+imagedestroy($image);
+?>
